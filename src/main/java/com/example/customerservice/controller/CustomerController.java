@@ -9,25 +9,24 @@ import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/api/customers")
-public class CustomerController
-{
-    //URL PARA PRUEBAS: http://localhost:8090/api/customers/C/23445322
+public class CustomerController {
+
+    // URL PARA PRUEBAS: http://localhost:8090/api/customers/C/23445322
     private static final Logger logger = LoggerFactory.getLogger(CustomerController.class);
 
     @GetMapping("/{type}/{document}")
     public ResponseEntity<?> getCustomer(
             @PathVariable("type") String type,
-            @PathVariable("document") String document) 
-    {
+            @PathVariable("document") String document) {
 
         logger.info("Solicitud recibida: Tipo de documento: {}, Número: {}", type, document);
 
-        if (!type.equals("C") && !type.equals("P")) {
+        if (!type.equalsIgnoreCase("C") && !type.equalsIgnoreCase("P")) {
             logger.warn("Tipo de documento inválido: {}", type);
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Tipo de documento inválido.");
         }
 
-        if (type.equals("C") && document.equals("23445322")) {
+        if ((type.equalsIgnoreCase("P") || type.equalsIgnoreCase("C")) && document.equals("23445322")) {
             Customer customer = new Customer("Juan", "Carlos", "Pérez", "Gómez", "123456789", "Calle 123", "Bogotá");
             logger.info("Cliente encontrado: {}", customer.getFirstName());
             return ResponseEntity.ok(customer);
